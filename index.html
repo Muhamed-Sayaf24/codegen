@@ -1,8 +1,1268 @@
-<html>
-<head>
-  <title> This is the home page </title>
-</head>
-<body>
-<h1>Introduction to html</h1>
-</body>
-  </html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prescription Upload Portal</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --primary: #2d6cdf;
+        --primary-dark: #1f4fa8;
+        --surface: #ffffff;
+        --background: #f4f6fb;
+        --border: #d9dfeb;
+        --success: #2f9e44;
+        --danger: #d64545;
+        --muted: #66728a;
+        --radius: 14px;
+        --shadow: 0 16px 40px -24px rgba(17, 33, 73, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--background);
+        color: #1f2937;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .header-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .brand h1 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--primary);
+      }
+
+      .brand span {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      nav {
+        display: flex;
+        gap: 10px;
+      }
+
+      nav button {
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--muted);
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      nav button.active {
+        background: rgba(45, 108, 223, 0.1);
+        color: var(--primary);
+        border-color: rgba(45, 108, 223, 0.2);
+      }
+
+      main {
+        flex: 1;
+        width: 100%;
+      }
+
+      .content {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 20px 56px;
+        display: grid;
+        gap: 24px;
+      }
+
+      .portal {
+        display: none;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .portal.active {
+        display: flex;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid rgba(21, 37, 79, 0.08);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1f2937;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      input,
+      select,
+      textarea {
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: border 0.2s ease;
+        font-family: inherit;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.18);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 90px;
+      }
+
+      button[type="submit"],
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.1s ease;
+      }
+
+      button[type="submit"]:hover,
+      .btn:hover {
+        background: var(--primary-dark);
+      }
+
+      button[type="submit"]:active,
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn-secondary {
+        background: rgba(45, 108, 223, 0.12);
+        color: var(--primary);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .message {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+      }
+
+      .message.success {
+        background: rgba(47, 158, 68, 0.1);
+        color: var(--success);
+        border-color: rgba(47, 158, 68, 0.2);
+      }
+
+      .message.error {
+        background: rgba(214, 69, 69, 0.1);
+        color: var(--danger);
+        border-color: rgba(214, 69, 69, 0.2);
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .toolbar .info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .prescription-card {
+        border: 1px solid rgba(21, 37, 79, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        background: #fafbff;
+        display: grid;
+        gap: 12px;
+      }
+
+      .prescription-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .thumbnail-strip {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .thumbnail-strip button,
+      .thumbnail-strip img {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        object-fit: cover;
+        cursor: pointer;
+        background: #e3e8f7;
+      }
+
+      .thumbnail-strip button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .quote-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+      }
+
+      .quote-table th,
+      .quote-table td {
+        padding: 10px;
+        border-bottom: 1px solid rgba(21, 37, 79, 0.1);
+        text-align: left;
+      }
+
+      .quote-table tfoot td {
+        font-weight: 700;
+      }
+
+      .quote-form-inline {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        align-items: end;
+      }
+
+      .quote-form-inline button {
+        width: 100%;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        border: 2px dashed rgba(21, 37, 79, 0.12);
+        border-radius: 12px;
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(45, 108, 223, 0.1);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+
+      .badge.success {
+        background: rgba(47, 158, 68, 0.1);
+        color: var(--success);
+      }
+
+      dialog::backdrop {
+        background: rgba(16, 24, 40, 0.45);
+      }
+
+      dialog {
+        border: none;
+        border-radius: 16px;
+        padding: 0;
+        overflow: hidden;
+        max-width: 90vw;
+        max-height: 90vh;
+        background: none;
+      }
+
+      .modal-card {
+        background: #000;
+        position: relative;
+      }
+
+      .modal-card img {
+        display: block;
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+        cursor: pointer;
+      }
+
+      @media (max-width: 720px) {
+        .header-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        nav {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        .quote-form-inline {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <h1>MediBridge Rx</h1>
+          <span>Secure prescription uploads & pharmacy quotations</span>
+        </div>
+        <nav>
+          <button id="user-tab" class="active" type="button">User Portal</button>
+          <button id="pharmacy-tab" type="button">Pharmacy Portal</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="content">
+        <section id="user-portal" class="portal active">
+          <div class="card toolbar hidden" id="user-toolbar">
+            <div class="info">
+              <strong id="user-welcome"></strong>
+              <span>Upload prescriptions, track orders, and view pharmacy quotations.</span>
+            </div>
+            <button id="user-logout" class="btn-secondary" type="button">Log out</button>
+          </div>
+          <div class="grid" id="user-auth-panel">
+            <div class="card" id="register-card">
+              <div>
+                <h2>Create an account</h2>
+                <p class="subtitle">Register as a patient or pharmacy partner to get started.</p>
+              </div>
+              <form id="register-form">
+                <label>
+                  Account type
+                  <select name="type" required>
+                    <option value="user">Patient / Caregiver</option>
+                    <option value="pharmacy">Pharmacy</option>
+                  </select>
+                </label>
+                <label>
+                  Full name
+                  <input name="name" type="text" placeholder="Jane Doe" required />
+                </label>
+                <label>
+                  Email address
+                  <input name="email" type="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Password
+                  <input name="password" type="password" minlength="6" placeholder="Minimum 6 characters" required />
+                </label>
+                <label>
+                  Contact number
+                  <input name="contact" type="tel" placeholder="(+00) 000 0000" required />
+                </label>
+                <label>
+                  Date of birth
+                  <input name="dob" type="date" required />
+                </label>
+                <label>
+                  Address
+                  <textarea name="address" placeholder="Street, city, postal code" required></textarea>
+                </label>
+                <div id="register-message" class="message hidden"></div>
+                <button type="submit">Create account</button>
+              </form>
+            </div>
+            <div class="card" id="login-card">
+              <div>
+                <h2>Sign in</h2>
+                <p class="subtitle">Access your prescription dashboard.</p>
+              </div>
+              <form id="login-form">
+                <label>
+                  Email address
+                  <input name="email" type="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Password
+                  <input name="password" type="password" required />
+                </label>
+                <div id="login-message" class="message hidden"></div>
+                <button type="submit">Sign in</button>
+              </form>
+              <p class="subtitle">Pharmacy partner? Use the Pharmacy Portal tab.</p>
+            </div>
+          </div>
+          <div class="card hidden" id="upload-card">
+            <div class="card-header">
+              <h2>Upload a prescription</h2>
+              <span class="badge">Maximum 5 images</span>
+            </div>
+            <form id="prescription-form">
+              <label>
+                Prescription images
+                <input name="images" type="file" accept="image/*" multiple required />
+              </label>
+              <label>
+                Delivery address
+                <textarea name="deliveryAddress" placeholder="Delivery address" required></textarea>
+              </label>
+              <label>
+                Delivery window (2 hour slot)
+                <select name="deliverySlot" required></select>
+              </label>
+              <label>
+                Notes to pharmacy
+                <textarea name="note" placeholder="Optional instructions"></textarea>
+              </label>
+              <div id="upload-message" class="message hidden"></div>
+              <button type="submit">Submit prescription</button>
+            </form>
+          </div>
+          <div class="card hidden" id="user-prescriptions-card">
+            <div class="card-header">
+              <h2>Your uploads</h2>
+            </div>
+            <div id="user-prescription-list" class="list"></div>
+          </div>
+        </section>
+
+        <section id="pharmacy-portal" class="portal">
+          <div class="card toolbar hidden" id="pharmacy-toolbar">
+            <div class="info">
+              <strong id="pharmacy-welcome"></strong>
+              <span>Review patient prescriptions and respond with quotations.</span>
+            </div>
+            <button id="pharmacy-logout" class="btn-secondary" type="button">Log out</button>
+          </div>
+          <div class="card" id="pharmacy-login-card">
+            <div>
+              <h2>Pharmacy sign in</h2>
+              <p class="subtitle">Only pharmacy accounts can access this workspace.</p>
+            </div>
+            <form id="pharmacy-login-form">
+              <label>
+                Email address
+                <input name="email" type="email" placeholder="pharmacy@example.com" required />
+              </label>
+              <label>
+                Password
+                <input name="password" type="password" required />
+              </label>
+              <div id="pharmacy-login-message" class="message hidden"></div>
+              <button type="submit">Access dashboard</button>
+            </form>
+          </div>
+          <div id="pharmacy-dashboard" class="hidden">
+            <div class="card">
+              <div class="card-header">
+                <h2>Incoming prescriptions</h2>
+              </div>
+              <div id="pharmacy-prescription-list" class="list"></div>
+            </div>
+            <div class="card" id="quotation-card">
+              <div class="card-header">
+                <h2>Quotation builder</h2>
+                <span class="badge" id="quotation-status">Select a prescription</span>
+              </div>
+              <div id="selected-prescription" class="selected-prescription"></div>
+              <form id="quotation-form" class="quote-form-inline">
+                <label>
+                  Drug name
+                  <input name="drug" type="text" placeholder="Amoxicillin 250mg" required />
+                </label>
+                <label>
+                  Unit price
+                  <input name="unitPrice" type="number" min="0" step="0.01" placeholder="10.00" required />
+                </label>
+                <label>
+                  Quantity
+                  <input name="quantity" type="number" min="1" step="1" placeholder="5" required />
+                </label>
+                <button type="submit" class="btn">Add item</button>
+              </form>
+              <div id="quotation-message" class="message hidden"></div>
+              <div id="quotation-table-wrapper" class="hidden">
+                <table class="quote-table">
+                  <thead>
+                    <tr>
+                      <th>Drug</th>
+                      <th>Quantity</th>
+                      <th>Amount</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="quotation-items"></tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="2">Total</td>
+                      <td id="quotation-total">0.00</td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <button id="send-quotation" class="btn" type="button">Send quotation</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <dialog id="image-modal">
+      <div class="modal-card">
+        <button type="button" class="modal-close" aria-label="Close preview">×</button>
+        <img alt="Prescription preview" />
+      </div>
+    </dialog>
+
+    <script>
+      const storage = {
+        _read(key, defaultValue) {
+          try {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : defaultValue;
+          } catch (error) {
+            console.error("Failed to parse storage", key, error);
+            return defaultValue;
+          }
+        },
+        _write(key, value) {
+          localStorage.setItem(key, JSON.stringify(value));
+        },
+        get accounts() {
+          return this._read("mpu_accounts", []);
+        },
+        set accounts(list) {
+          this._write("mpu_accounts", list);
+        },
+        get prescriptions() {
+          return this._read("mpu_prescriptions", []);
+        },
+        set prescriptions(list) {
+          this._write("mpu_prescriptions", list);
+        },
+        get session() {
+          return this._read("mpu_session", null);
+        },
+        set session(data) {
+          if (!data) {
+            localStorage.removeItem("mpu_session");
+          } else {
+            this._write("mpu_session", data);
+          }
+        }
+      };
+
+      const formatCurrency = (value) => {
+        return Number(value || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      };
+
+      const formatDateTime = (value) => {
+        return new Intl.DateTimeFormat(undefined, {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }).format(new Date(value));
+      };
+
+      const deliverySlots = (() => {
+        const slots = [];
+        const start = 6; // 6 AM
+        const end = 22; // 10 PM
+        for (let hour = start; hour < end; hour += 2) {
+          const nextHour = hour + 2;
+          const pad = (h) => String(h).padStart(2, "0");
+          slots.push(`${pad(hour)}:00 - ${pad(nextHour)}:00`);
+        }
+        return slots;
+      })();
+
+      const ui = {
+        userTab: document.getElementById("user-tab"),
+        pharmacyTab: document.getElementById("pharmacy-tab"),
+        userPortal: document.getElementById("user-portal"),
+        pharmacyPortal: document.getElementById("pharmacy-portal"),
+        registerForm: document.getElementById("register-form"),
+        registerMessage: document.getElementById("register-message"),
+        loginForm: document.getElementById("login-form"),
+        loginMessage: document.getElementById("login-message"),
+        pharmacyLoginForm: document.getElementById("pharmacy-login-form"),
+        pharmacyLoginMessage: document.getElementById("pharmacy-login-message"),
+        prescriptionForm: document.getElementById("prescription-form"),
+        uploadMessage: document.getElementById("upload-message"),
+        userToolbar: document.getElementById("user-toolbar"),
+        userWelcome: document.getElementById("user-welcome"),
+        userLogout: document.getElementById("user-logout"),
+        uploadCard: document.getElementById("upload-card"),
+        userPrescriptionsCard: document.getElementById("user-prescriptions-card"),
+        userPrescriptionList: document.getElementById("user-prescription-list"),
+        userAuthPanel: document.getElementById("user-auth-panel"),
+        pharmacyToolbar: document.getElementById("pharmacy-toolbar"),
+        pharmacyWelcome: document.getElementById("pharmacy-welcome"),
+        pharmacyLogout: document.getElementById("pharmacy-logout"),
+        pharmacyDashboard: document.getElementById("pharmacy-dashboard"),
+        pharmacyPrescriptionList: document.getElementById("pharmacy-prescription-list"),
+        pharmacyLoginCard: document.getElementById("pharmacy-login-card"),
+        quotationForm: document.getElementById("quotation-form"),
+        quotationMessage: document.getElementById("quotation-message"),
+        quotationTableWrapper: document.getElementById("quotation-table-wrapper"),
+        quotationItems: document.getElementById("quotation-items"),
+        quotationTotal: document.getElementById("quotation-total"),
+        quotationStatus: document.getElementById("quotation-status"),
+        sendQuotation: document.getElementById("send-quotation"),
+        selectedPrescription: document.getElementById("selected-prescription"),
+        imageModal: document.getElementById("image-modal"),
+        imageModalClose: document.querySelector(".modal-close")
+      };
+
+      const deliverySelect = ui.prescriptionForm.querySelector("select[name=deliverySlot]");
+      deliverySlots.forEach((slot) => {
+        const option = document.createElement("option");
+        option.value = slot;
+        option.textContent = slot;
+        deliverySelect.appendChild(option);
+      });
+
+      const showMessage = (element, message, type) => {
+        element.textContent = message;
+        element.classList.remove("hidden", "success", "error");
+        element.classList.add(type);
+        clearTimeout(element.dataset?.timeout);
+        const timeout = setTimeout(() => {
+          element.classList.add("hidden");
+        }, 5000);
+        element.dataset.timeout = timeout;
+      };
+
+      const clearMessage = (element) => {
+        element.textContent = "";
+        element.classList.add("hidden");
+        element.classList.remove("success", "error");
+      };
+
+      const createAccount = (account) => {
+        const accounts = storage.accounts;
+        if (accounts.some((item) => item.email.toLowerCase() === account.email.toLowerCase())) {
+          throw new Error("An account with this email already exists.");
+        }
+        accounts.push({
+          id: crypto.randomUUID(),
+          createdAt: new Date().toISOString(),
+          ...account
+        });
+        storage.accounts = accounts;
+      };
+
+      const authenticate = (email, password, type) => {
+        const account = storage.accounts.find(
+          (item) => item.email.toLowerCase() === email.toLowerCase() && item.type === type
+        );
+        if (!account) {
+          throw new Error("Account not found.");
+        }
+        if (account.password !== password) {
+          throw new Error("Incorrect password.");
+        }
+        storage.session = {
+          accountId: account.id,
+          type: account.type,
+          loggedInAt: Date.now()
+        };
+        return account;
+      };
+
+      const logout = () => {
+        storage.session = null;
+        selectedPrescriptionId = null;
+        currentQuotationItems = [];
+        render();
+      };
+
+      const getActiveAccount = () => {
+        const session = storage.session;
+        if (!session) return null;
+        return storage.accounts.find((item) => item.id === session.accountId) || null;
+      };
+
+      const readFileAsDataURL = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+
+      const upsertPrescription = (prescription) => {
+        const prescriptions = storage.prescriptions;
+        const index = prescriptions.findIndex((item) => item.id === prescription.id);
+        if (index === -1) {
+          prescriptions.push(prescription);
+        } else {
+          prescriptions[index] = prescription;
+        }
+        storage.prescriptions = prescriptions;
+      };
+
+      const renderUserSection = (account) => {
+        const isLoggedIn = account && account.type === "user";
+        ui.userToolbar.classList.toggle("hidden", !isLoggedIn);
+        ui.userAuthPanel.classList.toggle("hidden", isLoggedIn);
+        ui.uploadCard.classList.toggle("hidden", !isLoggedIn);
+        ui.userPrescriptionsCard.classList.toggle("hidden", !isLoggedIn);
+        if (isLoggedIn) {
+          ui.userWelcome.textContent = `Welcome back, ${account.name}`;
+          renderUserPrescriptions(account);
+        } else {
+          ui.userPrescriptionList.innerHTML = "";
+        }
+      };
+
+      const renderUserPrescriptions = (account) => {
+        const prescriptions = storage.prescriptions
+          .filter((item) => item.userId === account.id)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        if (prescriptions.length === 0) {
+          ui.userPrescriptionList.innerHTML = '<div class="empty-state">No prescriptions uploaded yet.</div>';
+          return;
+        }
+
+        ui.userPrescriptionList.innerHTML = "";
+        prescriptions.forEach((prescription) => {
+          const card = document.createElement("div");
+          card.className = "prescription-card";
+
+          const statusBadge = document.createElement("span");
+          statusBadge.className = `badge ${prescription.status === "quoted" ? "success" : ""}`;
+          statusBadge.textContent = prescription.status === "quoted" ? "Quotation received" : "Pending";
+
+          const heading = document.createElement("div");
+          heading.className = "prescription-meta";
+          heading.innerHTML = `
+            <strong>Uploaded ${formatDateTime(prescription.createdAt)}</strong>
+            <span>Delivery: ${prescription.deliverySlot}</span>
+            <span>${prescription.deliveryAddress}</span>
+          `;
+
+          const note = document.createElement("p");
+          note.textContent = prescription.note ? `Note: ${prescription.note}` : "No special instructions.";
+
+          const thumbnails = createThumbnailStrip(prescription.images);
+
+          card.append(statusBadge, heading, note, thumbnails);
+
+          if (prescription.quotation) {
+            const quote = document.createElement("div");
+            quote.innerHTML = `
+              <h3>Latest quotation</h3>
+              <table class="quote-table">
+                <thead>
+                  <tr><th>Drug</th><th>Quantity</th><th>Amount</th></tr>
+                </thead>
+                <tbody>
+                  ${prescription.quotation.items
+                    .map(
+                      (item) => `
+                        <tr>
+                          <td>${item.drug}</td>
+                          <td>${formatCurrency(item.unitPrice)} × ${item.quantity}</td>
+                          <td>${formatCurrency(item.amount)}</td>
+                        </tr>
+                      `
+                    )
+                    .join("")}
+                </tbody>
+                <tfoot><tr><td colspan="2">Total</td><td>${formatCurrency(
+                  prescription.quotation.total
+                )}</td></tr></tfoot>
+              </table>
+            `;
+            card.appendChild(quote);
+          }
+
+          ui.userPrescriptionList.appendChild(card);
+        });
+      };
+
+      const createThumbnailStrip = (images) => {
+        const strip = document.createElement("div");
+        strip.className = "thumbnail-strip";
+        images.forEach((src, index) => {
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = `Prescription ${index + 1}`;
+          img.addEventListener("click", () => openImageModal(src));
+          strip.appendChild(img);
+        });
+        return strip;
+      };
+
+      const renderPharmacySection = (account) => {
+        const isLoggedIn = account && account.type === "pharmacy";
+        ui.pharmacyToolbar.classList.toggle("hidden", !isLoggedIn);
+        ui.pharmacyLoginCard.classList.toggle("hidden", isLoggedIn);
+        ui.pharmacyDashboard.classList.toggle("hidden", !isLoggedIn);
+        if (isLoggedIn) {
+          ui.pharmacyWelcome.textContent = `Logged in as ${account.name}`;
+          renderPharmacyPrescriptions();
+        } else {
+          ui.pharmacyPrescriptionList.innerHTML = "";
+          ui.selectedPrescription.innerHTML = "";
+          ui.quotationStatus.textContent = "Select a prescription";
+          ui.quotationTableWrapper.classList.add("hidden");
+          ui.quotationItems.innerHTML = "";
+          ui.quotationTotal.textContent = "0.00";
+        }
+      };
+
+      const renderPharmacyPrescriptions = () => {
+        const prescriptions = storage.prescriptions.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        if (prescriptions.length === 0) {
+          ui.pharmacyPrescriptionList.innerHTML = '<div class="empty-state">No prescriptions submitted yet.</div>';
+          return;
+        }
+
+        ui.pharmacyPrescriptionList.innerHTML = "";
+        prescriptions.forEach((prescription) => {
+          const card = document.createElement("div");
+          card.className = "prescription-card";
+
+          const header = document.createElement("div");
+          header.className = "prescription-meta";
+          const user = storage.accounts.find((item) => item.id === prescription.userId);
+          header.innerHTML = `
+            <strong>${user ? user.name : "Unknown user"}</strong>
+            <span>${formatDateTime(prescription.createdAt)}</span>
+            <span>${prescription.deliverySlot}</span>
+          `;
+
+          const address = document.createElement("p");
+          address.textContent = prescription.deliveryAddress;
+
+          const note = document.createElement("p");
+          note.textContent = prescription.note ? `Note: ${prescription.note}` : "No special instructions.";
+
+          const thumbnails = createThumbnailStrip(prescription.images);
+
+          const action = document.createElement("button");
+          action.type = "button";
+          action.className = "btn";
+          action.textContent = "Prepare quotation";
+          action.addEventListener("click", () => selectPrescription(prescription.id));
+
+          if (prescription.id === selectedPrescriptionId) {
+            action.textContent = "Selected";
+            action.classList.add("btn-secondary");
+          }
+
+          card.append(header, address, note, thumbnails, action);
+          ui.pharmacyPrescriptionList.appendChild(card);
+        });
+      };
+
+      const selectPrescription = (prescriptionId) => {
+        selectedPrescriptionId = prescriptionId;
+        const prescription = storage.prescriptions.find((item) => item.id === prescriptionId);
+        if (!prescription) return;
+
+        ui.selectedPrescription.innerHTML = `
+          <div class="prescription-card">
+            <div class="prescription-meta">
+              <strong>Delivery window: ${prescription.deliverySlot}</strong>
+              <span>${prescription.deliveryAddress}</span>
+              <span>Uploaded ${formatDateTime(prescription.createdAt)}</span>
+            </div>
+            <p>${prescription.note ? prescription.note : "No patient notes provided."}</p>
+            ${createThumbnailStrip(prescription.images).outerHTML}
+          </div>
+        `;
+
+        ui.quotationStatus.textContent = prescription.status === "quoted" ? "Update quotation" : "Create quotation";
+
+        currentQuotationItems = prescription.quotation ? [...prescription.quotation.items] : [];
+        refreshQuotationTable();
+        renderPharmacyPrescriptions();
+      };
+
+      const refreshQuotationTable = () => {
+        if (!selectedPrescriptionId) {
+          ui.quotationTableWrapper.classList.add("hidden");
+          ui.quotationItems.innerHTML = "";
+          ui.quotationTotal.textContent = "0.00";
+          return;
+        }
+
+        if (currentQuotationItems.length === 0) {
+          ui.quotationTableWrapper.classList.add("hidden");
+          ui.quotationItems.innerHTML = "";
+          ui.quotationTotal.textContent = "0.00";
+          return;
+        }
+
+        ui.quotationTableWrapper.classList.remove("hidden");
+        ui.quotationItems.innerHTML = "";
+
+        let total = 0;
+        currentQuotationItems.forEach((item, index) => {
+          total += item.amount;
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.drug}</td>
+            <td>${formatCurrency(item.unitPrice)} × ${item.quantity}</td>
+            <td>${formatCurrency(item.amount)}</td>
+          `;
+          const removeCell = document.createElement("td");
+          const removeBtn = document.createElement("button");
+          removeBtn.type = "button";
+          removeBtn.textContent = "Remove";
+          removeBtn.className = "btn-secondary";
+          removeBtn.addEventListener("click", () => {
+            currentQuotationItems.splice(index, 1);
+            refreshQuotationTable();
+          });
+          removeCell.appendChild(removeBtn);
+          row.appendChild(removeCell);
+          ui.quotationItems.appendChild(row);
+        });
+        ui.quotationTotal.textContent = formatCurrency(total);
+      };
+
+      const openImageModal = (src) => {
+        const img = ui.imageModal.querySelector("img");
+        img.src = src;
+        ui.imageModal.showModal();
+      };
+
+      ui.imageModalClose.addEventListener("click", () => ui.imageModal.close());
+      ui.imageModal.addEventListener("click", (event) => {
+        if (event.target === ui.imageModal) {
+          ui.imageModal.close();
+        }
+      });
+
+      ui.userTab.addEventListener("click", () => {
+        ui.userTab.classList.add("active");
+        ui.pharmacyTab.classList.remove("active");
+        ui.userPortal.classList.add("active");
+        ui.pharmacyPortal.classList.remove("active");
+      });
+
+      ui.pharmacyTab.addEventListener("click", () => {
+        ui.pharmacyTab.classList.add("active");
+        ui.userTab.classList.remove("active");
+        ui.pharmacyPortal.classList.add("active");
+        ui.userPortal.classList.remove("active");
+      });
+
+      ui.registerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessage(ui.registerMessage);
+        const formData = new FormData(event.target);
+        const account = {
+          type: formData.get("type"),
+          name: formData.get("name").trim(),
+          email: formData.get("email").trim(),
+          password: formData.get("password"),
+          contact: formData.get("contact").trim(),
+          dob: formData.get("dob"),
+          address: formData.get("address").trim()
+        };
+
+        try {
+          createAccount(account);
+          showMessage(
+            ui.registerMessage,
+            account.type === "pharmacy"
+              ? "Pharmacy account created. You can sign in from the Pharmacy Portal."
+              : "Account created. You can now sign in.",
+            "success"
+          );
+          event.target.reset();
+        } catch (error) {
+          showMessage(ui.registerMessage, error.message, "error");
+        }
+      });
+
+      ui.loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessage(ui.loginMessage);
+        const formData = new FormData(event.target);
+        const email = formData.get("email").trim();
+        const password = formData.get("password");
+        try {
+          const account = authenticate(email, password, "user");
+          showMessage(ui.loginMessage, `Welcome ${account.name}!`, "success");
+          event.target.reset();
+          render();
+        } catch (error) {
+          showMessage(ui.loginMessage, error.message, "error");
+        }
+      });
+
+      ui.pharmacyLoginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessage(ui.pharmacyLoginMessage);
+        const formData = new FormData(event.target);
+        const email = formData.get("email").trim();
+        const password = formData.get("password");
+        try {
+          const account = authenticate(email, password, "pharmacy");
+          showMessage(ui.pharmacyLoginMessage, `Welcome ${account.name}!`, "success");
+          event.target.reset();
+          render();
+        } catch (error) {
+          showMessage(ui.pharmacyLoginMessage, error.message, "error");
+        }
+      });
+
+      ui.prescriptionForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearMessage(ui.uploadMessage);
+        const account = getActiveAccount();
+        if (!account || account.type !== "user") {
+          showMessage(ui.uploadMessage, "You must be logged in as a user to upload.", "error");
+          return;
+        }
+
+        const formData = new FormData(event.target);
+        const files = Array.from(formData.getAll("images"))
+          .flat()
+          .filter((file) => file instanceof File);
+
+        if (files.length === 0) {
+          showMessage(ui.uploadMessage, "Please select at least one prescription image.", "error");
+          return;
+        }
+
+        if (files.length > 5) {
+          showMessage(ui.uploadMessage, "You can only upload up to 5 images per prescription.", "error");
+          return;
+        }
+
+        try {
+          const images = await Promise.all(files.map((file) => readFileAsDataURL(file)));
+          const prescription = {
+            id: crypto.randomUUID(),
+            userId: account.id,
+            createdAt: new Date().toISOString(),
+            note: formData.get("note").trim(),
+            deliveryAddress: formData.get("deliveryAddress").trim(),
+            deliverySlot: formData.get("deliverySlot"),
+            images,
+            status: "pending",
+            quotation: null
+          };
+          upsertPrescription(prescription);
+          event.target.reset();
+          showMessage(ui.uploadMessage, "Prescription uploaded successfully.", "success");
+          renderUserPrescriptions(account);
+        } catch (error) {
+          console.error(error);
+          showMessage(ui.uploadMessage, "Failed to process images. Please try again.", "error");
+        }
+      });
+
+      ui.userLogout.addEventListener("click", logout);
+      ui.pharmacyLogout.addEventListener("click", logout);
+
+      let selectedPrescriptionId = null;
+      let currentQuotationItems = [];
+
+      ui.quotationForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearMessage(ui.quotationMessage);
+        if (!selectedPrescriptionId) {
+          showMessage(ui.quotationMessage, "Select a prescription first.", "error");
+          return;
+        }
+
+        const formData = new FormData(event.target);
+        const drug = formData.get("drug").trim();
+        const unitPrice = Number(formData.get("unitPrice"));
+        const quantity = Number(formData.get("quantity"));
+
+        if (!drug || isNaN(unitPrice) || isNaN(quantity) || unitPrice <= 0 || quantity <= 0) {
+          showMessage(ui.quotationMessage, "Provide valid drug, price, and quantity.", "error");
+          return;
+        }
+
+        const amount = unitPrice * quantity;
+        currentQuotationItems.push({ drug, unitPrice, quantity, amount });
+        refreshQuotationTable();
+        event.target.reset();
+        showMessage(ui.quotationMessage, "Quotation line added.", "success");
+      });
+
+      ui.sendQuotation.addEventListener("click", () => {
+        clearMessage(ui.quotationMessage);
+        if (!selectedPrescriptionId) {
+          showMessage(ui.quotationMessage, "Select a prescription to send a quotation.", "error");
+          return;
+        }
+        if (currentQuotationItems.length === 0) {
+          showMessage(ui.quotationMessage, "Add at least one line item.", "error");
+          return;
+        }
+
+        const account = getActiveAccount();
+        if (!account || account.type !== "pharmacy") {
+          showMessage(ui.quotationMessage, "You must be logged in as a pharmacy.", "error");
+          return;
+        }
+
+        const prescriptions = storage.prescriptions;
+        const index = prescriptions.findIndex((item) => item.id === selectedPrescriptionId);
+        if (index === -1) {
+          showMessage(ui.quotationMessage, "The prescription no longer exists.", "error");
+          return;
+        }
+
+        const total = currentQuotationItems.reduce((sum, item) => sum + item.amount, 0);
+        prescriptions[index] = {
+          ...prescriptions[index],
+          status: "quoted",
+          quotation: {
+            items: currentQuotationItems,
+            total,
+            preparedBy: account.name,
+            updatedAt: new Date().toISOString()
+          }
+        };
+        storage.prescriptions = prescriptions;
+        showMessage(ui.quotationMessage, "Quotation sent to the patient successfully.", "success");
+        refreshQuotationTable();
+        renderUserSection(getActiveAccount());
+        renderPharmacyPrescriptions();
+      });
+
+      const render = () => {
+        const account = getActiveAccount();
+        const session = storage.session;
+
+        if (!session) {
+          selectedPrescriptionId = null;
+          currentQuotationItems = [];
+        }
+
+        renderUserSection(account && account.type === "user" ? account : null);
+        renderPharmacySection(account && account.type === "pharmacy" ? account : null);
+      };
+
+      // Seed demo pharmacy account if none exists
+      if (!storage.accounts.some((item) => item.type === "pharmacy")) {
+        createAccount({
+          type: "pharmacy",
+          name: "MediBridge Pharmacy",
+          email: "pharmacy@example.com",
+          password: "pharmacy123",
+          contact: "+00 0000 0000",
+          dob: "2000-01-01",
+          address: "123 High Street"
+        });
+      }
+
+      render();
+    </script>
+  </body>
+</html>
